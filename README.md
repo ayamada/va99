@@ -63,6 +63,9 @@ Obsoleted older works:
 
 # ChangeLog
 
-- 1.0.XXXXXXXX
+- 2.0.20230721
+    - Change directory name for github pages
+
+- 1.0.20230721
     - Initial release
 

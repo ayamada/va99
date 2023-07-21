@@ -7,6 +7,8 @@ Tiny audio manager for BGM and SE in browser
 
 See online demo https://ayamada.github.io/va99/
 
+You can get this package from https://www.npmjs.com/package/va99
+
 
 # Features
 

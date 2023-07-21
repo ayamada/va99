@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8" />
+<link rel="icon" type="image/png" href="./favicon512.png" />
+<link rel="apple-touch-icon" href="./favicon180.png" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<style>
+body {
+  background-color: #DDD;
+  color: #000;
+  font-family: serif;
+}
+section {
+  margin-left: 6em;
+}
+h1, h2, h3 {
+  margin-top: 1em;
+  padding: 0.5em 0.5em 0.5em 2em;
+  background-color: #EEE;
+  color: #000;
+}
+h3 {
+  font-family: Courier, sans-serif, monospace;
+}
+code {
+  display: inline-block;
+  white-space: pre-wrap;
+  background-color: #DFDFDF;
+  color: #1F1F1F;
+  padding: 0.1em;
+  border: 1px solid black;
+  font-family: Courier, sans-serif, monospace;
+}
+code.console {
+  padding: 0.5em 1.5em 0.5em 1.5em;
+  background-color: #1F1F1F;
+  color: #DFDFDF;
+  border: 1px solid black;
+}
+button {
+  border: none;
+  text-align: center;
+  appearance: none;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+
+  padding: 1em;
+  margin: 0.5em;
+
+  background-color: rgb(127,255,191);
+  color: rgb(0,63,0);
+  border-bottom: 5px solid rgb(63,127,95);
+  -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+
+  border-radius: 1em;
+
+  display: inline-block;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em;
+  overflow-wrap: anywhere;
+
+  font-family: Courier, sans-serif, monospace;
+}
+button:active {
+  box-shadow: none;
+  transform: translateY(0.1em);
+}
+img.face {
+  position: absolute;
+  top: 0.5em;
+  left: -3em;
+}
+span.message-obav {
+  position: relative;
+  display: inline-block;
+  margin: 0.5em 0 0.5em 1em;
+  padding: 1em;
+  max-width: 100%;
+  color: #222;
+  background-color: #fff;
+  border-radius: 0.5em;
+}
+span.message-obav:before {
+  content: "";
+  position: absolute;
+  top: 1.5em;
+  left: -1.8em;
+  margin-top: -15px;
+  border: 15px solid transparent;
+  border-right: 15px solid #fff;
+}
+span.message-nekov {
+  position: relative;
+  display: inline-block;
+  margin: 0.5em 0 0.5em 1em;
+  padding: 1em;
+  max-width: 100%;
+  color: #222;
+  background-color: #ff7;
+  border-radius: 0.5em;
+}
+span.message-nekov:before {
+  content: "";
+  position: absolute;
+  top: 1.5em;
+  left: -1.8em;
+  margin-top: -15px;
+  border: 15px solid transparent;
+  border-right: 15px solid #ff7;
+}
+span.message-ulv {
+  position: relative;
+  display: inline-block;
+  margin: 0.5em 0 0.5em 1em;
+  padding: 1em;
+  max-width: 100%;
+  color: #222;
+  background-color: #bdf;
+}
+span.message-ulv:before {
+  content: "";
+  position: absolute;
+  top: 1.5em;
+  left: -1.8em;
+  margin-top: -15px;
+  border: 15px solid transparent;
+  border-right: 15px solid #bdf;
+}
+</style>
+<title>VA99</title>
+</head><body>
+
+
+<script src="./va99.js" type="text/javascript"></script>
+
+
+<section>
+
+<style>#forkongithub a{background:#000;color:#fff;text-decoration:none;font-family:arial,sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:1rem;line-height:2rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#c11;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:absolute;display:block;top:0;right:0;width:200px;overflow:hidden;height:200px;z-index:9999;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);-moz-transform:rotate(45deg);-o-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}</style><span id="forkongithub"><a href="https://github.com/ayamada/va99">Repos on GitHub</a></span>
+
+  <h1 id="title">* online demonstration of <code translate="no">VA99</code> *</h1>
+
+  <div><span class="message-obav"><img src="img/obav.gif" class="face" />
+  Hey!
+  You!
+  </span></div>
+
+  <div><span class="message-nekov"><img src="img/nekov.gif" class="face" />
+  What!?
+  </span></div>
+
+  <div><span class="message-obav"><img src="img/obav.gif" class="face" />
+  You, you must master to how to play sound in browser!
+  <br />
+  But, do not worry.
+  I teach to you to VA99!
+  </span></div>
+
+  <div><span class="message-nekov"><img src="img/nekov.gif" class="face" />
+  I don't get a word of what you is saying ...
+  <br />
+  I was baffled!
+  </span></div>
+
+  <div><span class="message-obav"><img src="img/obav.gif" class="face" />
+  First, you should load to js file.
+  <br />
+  Teach with the simplest way.
+  </span></div>
+
+  <div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
+  *BEEP*
+  <br />
+  <code class="console" translate="no">&lt;script src="https://cdn.jsdelivr.net/npm/va99/html/va99.min.js" type="text/javascript"&gt;&lt;/script&gt;</code>
+  </span></div>
+
+  <div><span class="message-obav"><img src="img/obav.gif" class="face" />
+      If you know more better way, you shall use that.
+      <br />
+      Do you know npm? If it is so, get package from npm.
+      <br />
+      <a href="https://www.npmjs.com/package/va99" target="_blank" rel="noopener noreferrer">https://www.npmjs.com/package/va99</a>
+  </span></div>
+
+  <div><span class="message-obav"><img src="img/obav.gif" class="face" />
+      Next, you should load audio files.
+      <br />
+      But beware.
+      Take a long time to load file.
+      So you may use <span translate="no">await</span>
+      or <span translate="no">then</span>.
+      <br />
+      I ran below codes this time.
+  </span></div>
+
+  <div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
+  *BEEP*
+  <br />
+  <code class="console run" translate="no">
+  (async function () {
+    window.kick = await VA.L("audio/kick.m4a");
+    window.unidentified = await VA.L("audio/unidentified.m4a");
+    window.dandd = await VA.L("audio/dandd.m4a");
+    window.cntr2 = await VA.L("audio/cntr2.m4a");
+  })();
+  </code>
+  </span></div>
+
+
+  <div><span class="message-obav"><img src="img/obav.gif" class="face" />
+      It is ready!
+      <br />
+      You push below buttons!
+      <br />
+      Well, push!
+      <br />
+      Let's!
+      <br />
+      Please!
+      <br />
+      Do it!
+  </span></div>
+
+  <div>
+  <button type="button" onclick="bEval(this)" translate="no">VA.P(unidentified)</button> // to play SE 1
+  <br />
+  <button type="button" onclick="bEval(this)" translate="no">VA.P(kick)</button> // to play SE 2
+  <br />
+
+  <button type="button" onclick="bEval(this)" translate="no">VA.BGM(dandd)</button> // to play BGM 1
+  <br />
+  <button type="button" onclick="bEval(this)" translate="no">VA.BGM(cntr2)</button> // to play BGM 2
+  <br />
+  <button type="button" onclick="bEval(this)" translate="no">VA.BGM()</button> // to stop BGM
+  </div>
+
+  <div><span class="message-nekov"><img src="img/nekov.gif" class="face" />
+  I heard these sounds
+  </span></div>
+
+  <div><span class="message-obav"><img src="img/obav.gif" class="face" />
+      Yes.
+      <br />
+      These buttons has function to execute own label as js-code.
+      <br />
+      So, you can play SE and BGM only these code!
+      <br />
+      This is basic and essence.
+      <br />
+      You, you became to master of playing sound in browsers!
+      <br />
+      Congratulations!
+  </span></div>
+
+  <div><span class="message-nekov"><img src="img/nekov.gif" class="face" />
+  What!?
+  </span></div>
+
+  <div><span class="message-obav"><img src="img/obav.gif" class="face" />
+  Leftover is miscellaneous specifications!
+  <br />
+  Read below if you interest!
+  </span></div>
+
+  <div><span class="message-nekov"><img src="img/nekov.gif" class="face" />
+  <span translate="no">
+  λ
+  <small>λ
+  <small>λ</small>
+  </small>
+  ...
+  </span>
+  </span></div>
+
+</section>
+<hr />
+<section>
+
+<h2 id="references">API References</h2>
+
+  <div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
+  *BEEP*
+  <br />
+  You can open js-console in your browser at this page,
+  and run codes that you want.
+  </span></div>
+
+
+  <h3 translate="no">VA.L()</h3>
+
+<div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
+    <span translate="no"><code>L</code> is for <code>Load</code>.</span>
+<br />
+It start to load from url of audio file, and return instance of audioBuffer later.
+<br />
+This is <span translate="no">async</span> function.
+<br />
+You can enhance this function by monkey patch if you need.
+</span></div>
+
+<button type="button" onclick="bEval(this)" translate="no">VA.L("audio/kick.m4a").then(function (ab) { window.kick = ab })</button>
+
+
+<h3 translate="no">VA.P()</h3>
+
+<div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
+    <span translate="no"><code>P</code> is for <code>Play</code> or <code>Prepare</code>.</span>
+<br />
+It play a sound from audioBuffer, and return instance of sourceNode.
+<br />
+<br />
+<code class="console" translate="no">
+VA.P(audioBuffer, dontStartAutomatically=false, dontReduceVolumeByExcessPlay=false)
+
+</code>
+<br />
+<br />
+<code translate="no">audioBuffer</code>: If it is null, do nothing, return undefined.
+<br />
+<br />
+<code translate="no">dontStartAutomatically</code>: If it is set,
+only prepare and return sourceNode, does't play this sound.
+<br />
+In this situation, you should execute <code translate="no">sourceNode.start()</code> later by yourself.
+<br />
+<br />
+<code translate="no">dontReduceVolumeByExcessPlay</code>: If it was set,
+does not use safety mechanism.
+<br />
+It may cause the audio catastrophe by playing SE per frame.
+<br />
+<br />
+Returned sourceNode contains
+gainNode as <code translate="no">G</code> and
+stereoPannerNode as <code translate="no">P</code>.
+<br />
+(iOS started to support stereoPannerNode from 2021/04)
+<br />
+You can tweak these freely.
+</span></div>
+
+<button type="button" onclick="bEval(this)" translate="no">VA.P(kick)</button> // play SE normally
+<br />
+<button type="button" onclick="bEval(this)" translate="no">sn = VA.P(kick, true); sn.G.gain.value = 0.5; if (sn.P) { sn.P.pan.value = -0.5 } sn.start()</button> // prepare SE and tweak parameters and play
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.P(unidentified, false, false)</button> // play SE with prevent excess playing (default)
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.P(unidentified, false, true)</button> // play SE without prevent excess playing (mash buttons for comparison)
+
+
+<h3 translate="no">VA.BGM()</h3>
+
+<div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
+    Play a BGM from audioBuffer.
+<br />
+<br />
+<code class="console" translate="no">
+VA.BGM(audioBuffer, isOneshot=0, fadeSec=1, pitch=1, volume=1, pan=0)
+
+</code>
+<br />
+<br />
+<code translate="no">audioBuffer</code>: If this is null, do only stop previous BGM with fade-out. Play nothing.
+<br />
+<br />
+If already playing previous BGM, first,
+finish previous BGM with fade-out,
+and then, it start to play new BGM.
+<br />
+If not playing previous BGM,
+it play new BGM immediately.
+<br />
+<br />
+<code translate="no">isOneshot</code>:
+If you set this, BGM is not looping.
+<br />
+<br />
+<code translate="no">fadeSec</code>: is applied to time of fade-out previous BGM.
+<br />
+If not playing previous BGM, play new BGM immediately notwithstanding this.
+<br />
+<br />
+<code translate="no">pitch</code>, <code translate="no">volume</code>, and
+<code translate="no">pan</code>: These are apply to new BGM.
+</span></div>
+
+<button type="button" onclick="bEval(this)" translate="no">VA.BGM(cntr2)</button> // play BGM normally
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.BGM()</button> // stop BGM with fade-out
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.BGM(dandd, true)</button> // play BGM oneshot
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.BGM(cntr2, false, 1, 1.5, 0.8, -0.5)</button> // play BGM with parameters
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.BGM(null, false, 0)</button> // stop previous BGM immediately
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.BGM(null, false, 3)</button> // stop previous BGM with long fade-out
+
+
+<h3 translate="no">VA.D()</h3>
+
+<div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
+    <span translate="no"><code>D</code> is for <code>Dispose</code>.</span>
+<br />
+Stop and dispose spent sourceNode safely.
+<br />
+This interface is rarely used.
+<br />
+Because, it is called automatically by internal usually.
+</span></div>
+
+<button type="button" onclick="bEval(this)" translate="no">sn = VA.P(kick); sn.loop = true</button> // play endless SE
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.D(sn)</button> // stop endless SE safely
+
+
+<h3 translate="no">VA.V</h3>
+
+<div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
+    <span translate="no"><code>V</code> is for <code>master Volume</code>.</span>
+<br />
+It is a property, not a function.
+<br />
+This is the master volume of VA99.
+<br />
+All playing SE and BGM are affected immediately by this changes.
+<br />
+Default value is 0.3.
+</span></div>
+
+<button type="button" onclick="bEval(this)" translate="no">console.log(VA.V)</button>
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.V = 1</button>
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.V = 0.2</button>
+
+
+<h3 translate="no">VA.A</h3>
+
+<div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
+    <span translate="no"><code>A</code> is for <code>AudioContext</code>.</span>
+<br />
+It is a property, not a function.
+<br />
+You access to instance of AudioContext in VA99 internal.
+<br />
+But you should beware unlocking AudioContext (See FAQ).
+</span></div>
+
+<button type="button" onclick="bEval(this)" translate="no">console.log(VA.A)</button>
+<br />
+<button type="button" onclick="bEval(this)" translate="no">console.log(VA.A.currentTime)</button>
+
+
+<h3 translate="no">VA.VER</h3>
+
+<div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
+It is a property, not a function.
+<br />
+You get a version string of this library.
+<br />
+It is rarely used.
+</span></div>
+
+<button type="button" onclick="bEval(this)" translate="no">console.log(VA.VER)</button>
+
+
+</section>
+<hr />
+<section>
+
+<h2 id="faq">FAQ</h2>
+
+  <div><span class="message-nekov"><img src="img/nekov.gif" class="face" />
+      Occasionally, doesn't play sound
+  </span></div>
+
+  <div><span class="message-obav"><img src="img/obav.gif" class="face" />
+      Perhaps, you don't execute <a href="https://www.google.com/search?nfpr=1&q=unlock%20AudioContext" target="_blank" rel="noopener noreferrer">unlock AudioContext</a>.
+      <br />
+      VA99 provide and activate handler to unlock AudioContext automatically, but this is only run by `user-action`.
+      <br />
+      More specifically, `user-action` mean click or touch to page screen of browser.
+      <br />
+      That means, you should not be play BGM at the first (probably title) scene in html5 games.
+  </span></div>
+
+
+  <div><span class="message-nekov"><img src="img/nekov.gif" class="face" />
+      Which type of audio file is best?
+  </span></div>
+
+  <div><span class="message-obav"><img src="img/obav.gif" class="face" />
+      Conclusion: <code translate="no">m4a</code> is better.
+      <br />
+      <br />
+      <code translate="no">mp3</code>
+      is may include useless silent time at head. Pretty noticeable in some situations.
+      <br />
+      <code translate="no">m4a</code>
+      is may include useless silent time at tail. But doesn't noticeable.
+      <br />
+      <code translate="no">ogg</code>
+      is not include useless silent time, good.
+      But some environments has lack of decoder.
+  </span></div>
+
+
+  <div><span class="message-nekov"><img src="img/nekov.gif" class="face" />
+      Does support IE?
+  </span></div>
+
+  <div><span class="message-obav"><img src="img/obav.gif" class="face" />
+      No.
+      <br />
+      VA99 support only Chromium family, WebKit mobile famliy and Firefox.
+      <br />
+      These of our time will update automatically itself, be maintained recency.
+      <br />
+      The dark age was already done.
+  </span></div>
+
+
+  <div><span class="message-nekov"><img src="img/nekov.gif" class="face" />
+      I see it is written in a little strange js
+  </span></div>
+
+  <div><span class="message-obav"><img src="img/obav.gif" class="face" />
+      Yes.
+      <br />
+      It is optimized for google-closure-compiler.
+      <br />
+      There is no problem in practice.
+  </span></div>
+
+
+  <div><span class="message-nekov"><img src="img/nekov.gif" class="face" />
+      VA99 is tiny sure,
+      but audio files remains in too big.
+      <br />
+      As a result, whole product not become tiny
+  </span></div>
+
+  <div><span class="message-obav"><img src="img/obav.gif" class="face" />
+      Exactly!
+      <br />
+      We need to prepare AudioBuffer by very little resources.
+      <br />
+      Infact, I had the answer for this problem, but work in progress.
+      <br />
+      <br />
+      To be continued ...
+  </span></div>
+
+</section>
+<hr />
+<section>
+
+<h2>table of contents</h2>
+
+<ul>
+  <li><a href="#title">* online demonstration of <span translate="no">VA99</span> *</a></li>
+  <li>
+    <a href="#references">API References</a>
+    <ul id="references_items" translate="no"></ul>
+  </li>
+  <li><a href="#faq">FAQ</a></li>
+</ul>
+
+</section>
+<hr />
+
+<script type="text/javascript">
+  window.bEval = function (b) { eval(b.textContent) };
+
+  document.querySelectorAll("code.run").forEach(function (dom) { eval(dom.textContent) });
+
+  const ri = document.getElementById("references_items");
+  document.querySelectorAll("h3").forEach(function (h3) {
+    h3.id = h3.textContent;
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    li.translate = "no";
+    a.translate = "no";
+    a.textContent = h3.textContent;
+    a.href = "#" + h3.textContent;
+    ri.appendChild(li);
+    li.appendChild(a);
+  });
+</script>
+
+</body></html>

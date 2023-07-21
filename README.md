@@ -1,13 +1,68 @@
-# va99
+# VA99
 
-TODO
+Tiny audio manager for BGM and SE in browser
+
+
+## Usage
+
+See online demo https://ayamada.github.io/va99/
+
+
+# Features
+
+- Play audio files (and so on) in browser, very easily
+- Small file size, about 2k
+- You can change master-volume
+- You can change volume of individual sounds
+- You can set panning of individual sounds
+- You can access to instance of AudioContext
+- Apply to fade-out volume automatically at changing BGM
+- Apply to suppress volume automatically when excess many SE
+- Add AudioContext unlocking handler to screen
+- You can override `loading` function if you want
+- You don't have to display licensing text in production build by Zlib license
+
+
+# Why Zlib license
+
+I don't want to display licensing text in production build.
+
+But almost all of common licenses require to display this in production build,
+except Zlib license.
+
+I think, licensing text is essentially meta information.
+
+It elicit an effect even separated from production, like as warranty card.
+
+
+
+I only want to ensure right to use this library for me.
+
+For example,
+an individual creator deliver thiers production with copyright to a big company,
+and this production using my library, and then,
+this big company found my library in the web by an automatic manner way,
+so this big company will accuse me and inhibit to use my library for me,
+potentially.
+
+Therefore my libraries need steady license.
+
+CC0 and Unlicense are insufficiency in some countries.
+
+
+# Why this name is VA99
+
+It is the final form of series of the `VNCTST-AUDIO`.
+
+Obsoleted older works:
+
+- https://github.com/ayamada/vnctst-audio3
+- https://github.com/ayamada/vnctst-audio4
+- https://github.com/ayamada/va5
 
 
 # ChangeLog
 
-- 1.0.0 (20XX-XX-XX)
-    - Initial release for stable version (plan)
-
-- 0.0.0 (20XX-XX-XX)
-    - Initial release for develop version (plan)
+- 1.0.XXXXXXXX
+    - Initial release
 

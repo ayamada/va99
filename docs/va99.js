@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '2.0.20230721'; /* auto-updated */
+  const version = '2.0.20230722'; /* auto-updated */
 
 
   var _audioContext;

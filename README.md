@@ -61,7 +61,7 @@ Obsoleted older works:
 - https://github.com/ayamada/va5
 
 
-# Why this package is in docs/ directory
+# Why this package is in `docs/` directory
 
 It is for github pages ...
 

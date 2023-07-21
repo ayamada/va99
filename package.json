@@ -1,18 +1,18 @@
 {
   "name": "va99",
-  "version": "1.0.20230721",
+  "version": "2.0.20230721",
   "description": "Tiny audio manager for BGM and SE in browser",
   "private": false,
   "homepage": "https://github.com/ayamada/va99",
   "author": "ayamada",
-  "main": "html/va99.js",
-  "module": "html/va99.min.mjs",
-  "jsdelivr": "html/va99.min.js",
-  "unpkg": "html/va99.min.js",
+  "main": "docs/va99.js",
+  "module": "docs/va99.min.mjs",
+  "jsdelivr": "docs/va99.min.js",
+  "unpkg": "docs/va99.min.js",
   "files": [
     "README.md",
     "LICENSE",
-    "html/va99.*"
+    "docs/va99.*"
   ],
   "devDependencies": {
     "google-closure-compiler": "20230502.0.0",
@@ -20,11 +20,11 @@
     "rimraf": "5.0.1"
   },
   "scripts": {
-    "premake": "node scripts/update-version.js html/va99.js",
+    "premake": "node scripts/update-version.js docs/va99.js",
     "make": "npm run make-min-js && npm run make-min-mjs",
-    "make-min-js": "google-closure-compiler --js html/va99.js --externs html/va99.externs.js --js_output_file html/va99.min.js --create_source_map html/va99.min.js.map --source_map_location_mapping 'html/|' --compilation_level ADVANCED_OPTIMIZATIONS --assume_function_wrapper --language_in ECMASCRIPT_2021 --language_out ECMASCRIPT_2021 --output_wrapper '%output%\n//# sourceMappingURL=va99.min.js.map'",
-    "make-min-mjs": "google-closure-compiler --js html/va99.js --externs html/va99.externs.js --js_output_file html/va99.min.mjs --create_source_map html/va99.min.mjs.map --source_map_location_mapping 'html/|' --compilation_level ADVANCED_OPTIMIZATIONS --assume_function_wrapper --allow_dynamic_import --language_in ECMASCRIPT_2021 --language_out ECMASCRIPT_2021 --output_wrapper 'export let %output%\n//# sourceMappingURL=va99.min.mjs.map'",
-    "http": "http-server -a 127.0.0.1 html -p 3000",
+    "make-min-js": "google-closure-compiler --js docs/va99.js --externs docs/va99.externs.js --js_output_file docs/va99.min.js --create_source_map docs/va99.min.js.map --source_map_location_mapping 'docs/|' --compilation_level ADVANCED_OPTIMIZATIONS --assume_function_wrapper --language_in ECMASCRIPT_2021 --language_out ECMASCRIPT_2021 --output_wrapper '%output%\n//# sourceMappingURL=va99.min.js.map'",
+    "make-min-mjs": "google-closure-compiler --js docs/va99.js --externs docs/va99.externs.js --js_output_file docs/va99.min.mjs --create_source_map docs/va99.min.mjs.map --source_map_location_mapping 'docs/|' --compilation_level ADVANCED_OPTIMIZATIONS --assume_function_wrapper --allow_dynamic_import --language_in ECMASCRIPT_2021 --language_out ECMASCRIPT_2021 --output_wrapper 'export let %output%\n//# sourceMappingURL=va99.min.mjs.map'",
+    "http": "http-server -a 127.0.0.1 docs -p 3000",
     "distclean": "rimraf node_modules package-lock.json"
   },
   "license": "Zlib"

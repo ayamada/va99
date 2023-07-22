@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '2.0.20230722'; /* auto-updated */
+  const version = '2.0.20230723'; /* auto-updated */
 
 
   // I want to prepare instance of AudioContext lazily,

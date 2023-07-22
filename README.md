@@ -70,6 +70,12 @@ It is for github pages ...
 
 # ChangeLog
 
+- 2.0.20230723
+    - Settle AudioContext initially for determine default sampleRate
+        - This cause a warning in js-console,
+          but loader need value of standard `sampleRate`,
+          and this is only provided by `_audioContext.sampleRate`.
+
 - 2.0.20230722
     - Update some documents
 

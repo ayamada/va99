@@ -1,11 +1,15 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '2.0.20230722'; /* auto-updated */
+  const version = '2.0.20230723'; /* auto-updated */
 
 
-  var _audioContext;
-  var ensureAudioContext = ()=> {
-    _audioContext ||= new (self.AudioContext||self.webkitAudioContext);
+  // I want to prepare instance of AudioContext lazily,
+  // but loader need value of sampleRate,
+  // and sampleRate is only provided by `_audioContext.sampleRate`.
+  // So this is prepared eagerly, cannot be helped.
+  // This is warned by Chromium, but cannot be helped.
+  var _audioContext = new (self.AudioContext||self.webkitAudioContext);
+  var unlockAudioContext = ()=> {
     // unlock AudioContext for chromium and firefox
     if (_audioContext.state == "suspended") {
       try { _audioContext.resume() } catch (e) {};
@@ -13,37 +17,29 @@ VA = (()=> {
   };
 
 
-  var disposeSourceNodeSafely = (sourceNode)=> {
-    // !!! free buffer from memory immediately, it is almost essential !!!
-    try { sourceNode.stop(); } catch (e) {};
-    try { sourceNode.disconnect(); } catch (e) {};
-    try { sourceNode.buffer = null; } catch (e) {};
-  };
-
-
   var _masterVolume = 0.3;
-  var _masterGainNode;
-  var resolveMasterGainNode = ()=> {
-    if (!_masterGainNode) {
-      _masterGainNode = _audioContext.createGain();
-      _masterGainNode.gain.value = _masterVolume;
-      _masterGainNode.connect(_audioContext.destination);
-    }
-    return _masterGainNode;
-  };
+  var _masterGainNode = _audioContext.createGain();
+  _masterGainNode.gain.value = _masterVolume;
+  _masterGainNode.connect(_audioContext.destination);
 
 
   var isAudioBuffer = (o)=> (o instanceof AudioBuffer);
 
 
-  var makeOfflineAudioContext = ()=> new (self.OfflineAudioContext||self.webkitOfflineAudioContext)(2, 2, _audioContext?.sampleRate || 44100);
-
-
+  var oac = new (self.OfflineAudioContext||self.webkitOfflineAudioContext)(2, 2, _audioContext.sampleRate);
   var asyncLoadAudioBuffer = async (url) => {
     var res = await fetch(url);
     if (!res.ok) throw new Error(url);
     var arrayBuffer = await res.arrayBuffer();
-    return await makeOfflineAudioContext().decodeAudioData(arrayBuffer);
+    return await oac.decodeAudioData(arrayBuffer);
+  };
+
+
+  var disposeSourceNodeSafely = (sourceNode)=> {
+    // !!! Free buffer from memory immediately, this is almost essential !!!
+    try { sourceNode.stop() } catch (e) {};
+    try { sourceNode.disconnect() } catch (e) {};
+    try { sourceNode.buffer = null } catch (e) {};
   };
 
 
@@ -52,13 +48,12 @@ VA = (()=> {
     sourceNode.buffer = audioBuffer;
     var endedFn = (e)=> {
       disposeSourceNodeSafely(sourceNode);
-      sourceNode.removeEventListener("ended", endedFn);
     };
-    sourceNode.addEventListener("ended", endedFn);
+    sourceNode.addEventListener("ended", endedFn, {once: true});
     // NB: can use createStereoPanner in iOS from 2021/04
     var stereoPannerNode = _audioContext.createStereoPanner?.();
     var gainNode = _audioContext.createGain();
-    (stereoPannerNode ? sourceNode.connect(stereoPannerNode) : sourceNode).connect(gainNode).connect(resolveMasterGainNode());
+    (stereoPannerNode ? sourceNode.connect(stereoPannerNode) : sourceNode).connect(gainNode).connect(_masterGainNode);
     sourceNode.G = gainNode;
     sourceNode.P = stereoPannerNode;
     return sourceNode;
@@ -67,7 +62,7 @@ VA = (()=> {
 
   var playingStack = [];
   var playAudioBuffer = (audioBuffer, dontStartAutomatically=0, dontReduceVolumeByExcessPlay=0)=> {
-    ensureAudioContext(); // unlock, first
+    unlockAudioContext(); // unlock, first
     if (isAudioBuffer(audioBuffer)) {
       var sourceNode = prepareSourceNode(audioBuffer);
       if (!dontReduceVolumeByExcessPlay) {
@@ -112,7 +107,6 @@ VA = (()=> {
 
 
   var playBgm = (audioBuffer, isOneshot=0, fadeSec=1, pitch=1, volume=1, pan=0)=> {
-    ensureAudioContext(); // unlock, first
     var sn = bgmState.sn;
     var pp = bgmState.playParams;
     if (sn?.buffer && !bgmState.isFading
@@ -139,14 +133,7 @@ VA = (()=> {
 
 
   // unlock AudioContext for iOS
-  ["click", "touchstart", "touchend"].forEach((k)=> {
-    let f = () => {
-      ensureAudioContext();
-      playAudioBuffer(_audioContext.createBuffer(1, 2, _audioContext.sampleRate), 0, 1),
-      document.removeEventListener(k, f, true);
-    };
-    document.addEventListener(k, f, true);
-  });
+  ["click", "touchstart", "touchend"].forEach((k)=> document.addEventListener(k, (() => playAudioBuffer(_audioContext.createBuffer(1, 2, _audioContext.sampleRate), 0, 1)), {once: true, capture: true}));
 
 
   return {
@@ -160,7 +147,7 @@ VA = (()=> {
       _masterVolume = v;
       if (_masterGainNode) { _masterGainNode.gain.value = v }
     }, // set master Volume
-    get A () { ensureAudioContext(); return _audioContext }, // Audio context
+    get A () { return _audioContext }, // Audio context
     VER: version,
 
     // sourceNode.G is GainNode, you can change sourceNode.G.gain.value

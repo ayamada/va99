@@ -3,7 +3,11 @@ VA = (()=> {
   const version = '2.0.20230722'; /* auto-updated */
 
 
-  // This is warned by chrome, but it need to refer `_audioContext.sampleRate` for offline
+  // I want to prepare instance of AudioContext lazily,
+  // but loader need value of sampleRate,
+  // and sampleRate is only provided by `_audioContext.sampleRate`.
+  // So this is prepared eagerly, cannot be helped.
+  // This is warned by Chromium, but cannot be helped.
   var _audioContext = new (self.AudioContext||self.webkitAudioContext);
   var unlockAudioContext = ()=> {
     // unlock AudioContext for chromium and firefox
@@ -44,9 +48,8 @@ VA = (()=> {
     sourceNode.buffer = audioBuffer;
     var endedFn = (e)=> {
       disposeSourceNodeSafely(sourceNode);
-      sourceNode.removeEventListener("ended", endedFn);
     };
-    sourceNode.addEventListener("ended", endedFn);
+    sourceNode.addEventListener("ended", endedFn, {once: true});
     // NB: can use createStereoPanner in iOS from 2021/04
     var stereoPannerNode = _audioContext.createStereoPanner?.();
     var gainNode = _audioContext.createGain();
@@ -130,13 +133,7 @@ VA = (()=> {
 
 
   // unlock AudioContext for iOS
-  ["click", "touchstart", "touchend"].forEach((k)=> {
-    let f = () => {
-      playAudioBuffer(_audioContext.createBuffer(1, 2, _audioContext.sampleRate), 0, 1),
-      document.removeEventListener(k, f, true);
-    };
-    document.addEventListener(k, f, true);
-  });
+  ["click", "touchstart", "touchend"].forEach((k)=> document.addEventListener(k, (() => playAudioBuffer(_audioContext.createBuffer(1, 2, _audioContext.sampleRate), 0, 1)), {once: true, capture: true}));
 
 
   return {

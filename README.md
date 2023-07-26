@@ -70,6 +70,10 @@ It is for github pages ...
 
 # ChangeLog
 
+- 2.0.20230727
+    - Apply `createDynamicsCompressor()` for last safety
+    - Optimize for size a bit
+
 - 2.0.20230723
     - Settle AudioContext initially for determine default sampleRate
         - This cause a warning in js-console,

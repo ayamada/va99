@@ -4,7 +4,7 @@
 
 let VA = {};
 
-VA.L = function (url) {};
+VA.L = async function (var_args) {};
 VA.P = function (var_args) {};
 VA.BGM = function (var_args) {};
 VA.D = function (sourceNode) {};

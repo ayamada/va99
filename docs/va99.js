@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '2.0.20230723'; /* auto-updated */
+  const version = '2.0.20230727'; /* auto-updated */
 
 
   // I want to prepare instance of AudioContext lazily,
@@ -17,10 +17,10 @@ VA = (()=> {
   };
 
 
-  var _masterVolume = 0.3;
   var _masterGainNode = _audioContext.createGain();
-  _masterGainNode.gain.value = _masterVolume;
-  _masterGainNode.connect(_audioContext.destination);
+  var compNode = _audioContext.createDynamicsCompressor();
+  var _masterVolume = _masterGainNode.gain.value = 0.3;
+  var setupMasterGainNode = () => _masterGainNode.connect(compNode).connect(_audioContext.destination);
 
 
   var isAudioBuffer = (o)=> (o instanceof AudioBuffer);
@@ -130,6 +130,9 @@ VA = (()=> {
     setTimeout(tick, intervalMsec);
 
   };
+
+
+  setupMasterGainNode();
 
 
   // unlock AudioContext for iOS

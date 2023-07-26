@@ -12,6 +12,7 @@
     - `npm publish`
     - `git tag -s v$(jq -r .version package.json) -m ''`
     - `git push && git push origin --tags`
+10. Merge to master branch in https://github.com/ayamada/va99
 
 
 

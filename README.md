@@ -21,7 +21,7 @@ You can get this package from https://www.npmjs.com/package/va99
 - Apply to fade-out volume automatically at changing BGM
 - Apply to suppress volume automatically when excess many SE
 - Add AudioContext unlocking handler to screen
-- You can override `loading` function if you want
+- You can override loading function if you want
 - You don't have to display licensing text in production build by Zlib license
 
 
@@ -36,7 +36,7 @@ I think, licensing text is essentially meta information.
 
 It elicit an effect even separated from production, like as warranty card.
 
-
+And more,
 
 I only want to ensure right to use this library for me.
 

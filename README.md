@@ -70,6 +70,9 @@ It is for github pages ...
 
 # ChangeLog
 
+- 3.0.20230728
+    - Change initial value of `VA.V` (master volume) from `0.3` to `0.2`
+
 - 2.0.20230727
     - Apply `createDynamicsCompressor()` for last safety
     - Optimize for size a bit

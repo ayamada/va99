@@ -201,6 +201,7 @@ span.message-ulv:before {
   <br />
   <code class="console run" translate="no">
   (async function () {
+    VA.V = 0.4; // Set master volume to 0.4 (default is 0.2)
     window.kick = await VA.L("audio/kick.m4a");
     window.unidentified = await VA.L("audio/unidentified.m4a");
     window.dandd = await VA.L("audio/dandd.m4a");
@@ -428,7 +429,7 @@ This is the master volume of VA99.
 <br />
 All playing SE and BGM are affected immediately by this changes.
 <br />
-Default value is 0.3.
+Default value is 0.2.
 </span></div>
 
 <button type="button" onclick="bEval(this)" translate="no">console.log(VA.V)</button>

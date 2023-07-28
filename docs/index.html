@@ -350,6 +350,8 @@ You can tweak these freely.
 <button type="button" onclick="bEval(this)" translate="no">VA.P(unidentified, false, false)</button> // play SE with prevent excess playing (default)
 <br />
 <button type="button" onclick="bEval(this)" translate="no">VA.P(unidentified, false, true)</button> // play SE without prevent excess playing (mash buttons for comparison)
+<br />
+<button type="button" onclick="bEval(this)" translate="no">sn = VA.P(kick); sn.G.gain.value = 1.5</button> // can set volume over 1.0 but may cause distortion
 
 
 <h3 translate="no">VA.BGM()</h3>
@@ -398,6 +400,8 @@ If not playing previous BGM, play new BGM immediately notwithstanding this.
 <br />
 <button type="button" onclick="bEval(this)" translate="no">VA.BGM(null, false, 0)</button> // stop previous BGM immediately
 <br />
+<button type="button" onclick="bEval(this)" translate="no">VA.BGM(dandd, false, 1, 1, 1.5)</button> // can set volume over 1.0 but may cause distortion
+<br />
 <button type="button" onclick="bEval(this)" translate="no">VA.BGM(null, false, 3)</button> // stop previous BGM with long fade-out
 
 
@@ -430,13 +434,21 @@ This is the master volume of VA99.
 All playing SE and BGM are affected immediately by this changes.
 <br />
 Default value is 0.2.
+<br />
+WARNING: Megavolume will cause down of audio quality!
+<br />
+You don't over to 0.5 for audio quality, if possible.
 </span></div>
 
 <button type="button" onclick="bEval(this)" translate="no">console.log(VA.V)</button>
 <br />
-<button type="button" onclick="bEval(this)" translate="no">VA.V = 1</button>
+<button type="button" onclick="bEval(this)" translate="no">VA.V = 1</button> // This will cause down of audio quality
 <br />
-<button type="button" onclick="bEval(this)" translate="no">VA.V = 0.2</button>
+<button type="button" onclick="bEval(this)" translate="no">VA.V = 0.5</button> // 0.5 is upper limit within safety range
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.V = 0.2</button> // default
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.V = 0.1</button>
 
 
 <h3 translate="no">VA.A</h3>
@@ -446,7 +458,7 @@ Default value is 0.2.
 <br />
 It is a property, not a function.
 <br />
-You access to instance of AudioContext in VA99 internal.
+You can access to instance of AudioContext in VA99 internal.
 <br />
 But you should beware unlocking AudioContext (See FAQ).
 </span></div>
@@ -454,6 +466,29 @@ But you should beware unlocking AudioContext (See FAQ).
 <button type="button" onclick="bEval(this)" translate="no">console.log(VA.A)</button>
 <br />
 <button type="button" onclick="bEval(this)" translate="no">console.log(VA.A.currentTime)</button>
+
+
+<h3 translate="no">VA.C</h3>
+
+<div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
+    <span translate="no"><code>C</code> is for <code>Compressor</code>.</span>
+<br />
+It is a property, not a function.
+<br />
+You can access to instance of <a href="https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/createDynamicsCompressor" target="_blank" rel="noopener noreferrer">DynamicsCompressorNode</a> in VA99 internal.
+<br />
+If you want to maximize volume, you should tweak it.
+<br />
+It is sufficient without modifications for routine use.
+</span></div>
+
+<button type="button" onclick="bEval(this)" translate="no">console.log(VA.C)</button>
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.C.threshold.value = -1</button>
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.C.threshold.value = -50</button>
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.V = 1.5; VA.P(kick); VA.P(unidentified)</button>
 
 
 <h3 translate="no">VA.VER</h3>

@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '3.0.20230728'; /* auto-updated */
+  const version = '3.0.20230729'; /* auto-updated */
 
 
   // I want to prepare instance of AudioContext lazily,
@@ -18,9 +18,16 @@ VA = (()=> {
 
 
   var _masterGainNode = _audioContext.createGain();
-  var compNode = _audioContext.createDynamicsCompressor();
+  var _compressorNode = _audioContext.createDynamicsCompressor();
   var _masterVolume = _masterGainNode.gain.value = 0.2;
-  var setupMasterGainNode = () => _masterGainNode.connect(compNode).connect(_audioContext.destination);
+  var setupMasterGainNode = () => {
+    // This settings is for html5 games
+    //_compressorNode.threshold.value = -12;
+    //_compressorNode.knee.value = 6;
+    //_compressorNode.ratio.value = 6;
+    _compressorNode.release.value = 0.01;
+    _masterGainNode.connect(_compressorNode).connect(_audioContext.destination);
+  }
 
 
   var isAudioBuffer = (o)=> (o instanceof AudioBuffer);
@@ -136,7 +143,7 @@ VA = (()=> {
 
 
   // unlock AudioContext for iOS
-  ["click", "touchstart", "touchend"].forEach((k)=> document.addEventListener(k, (() => playAudioBuffer(_audioContext.createBuffer(1, 2, _audioContext.sampleRate), 0, 1)), {once: true, capture: true}));
+  ["click", "touchstart", "touchend"].forEach((k)=> document.addEventListener(k, (() => playAudioBuffer(_audioContext.createBuffer(1, 2, _audioContext.sampleRate), 0, 1)), {once: true}));
 
 
   return {
@@ -151,6 +158,7 @@ VA = (()=> {
       if (_masterGainNode) { _masterGainNode.gain.value = v }
     }, // set master Volume
     get A () { return _audioContext }, // Audio context
+    get C () { return _compressorNode }, // Compressor node
     VER: version,
 
     // sourceNode.G is GainNode, you can change sourceNode.G.gain.value

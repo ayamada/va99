@@ -70,6 +70,11 @@ It is for github pages ...
 
 # ChangeLog
 
+- 3.1.20230729
+    - Add `VA.C` as an accessor to internal compressor node
+    - Remove `capture` flag from AudioContext-unlocker for iOS
+    - Update some documents
+
 - 3.0.20230728
     - Change initial value of `VA.V` (master volume) from `0.3` to `0.2`
 

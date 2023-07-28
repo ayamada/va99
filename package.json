@@ -1,6 +1,6 @@
 {
   "name": "va99",
-  "version": "3.0.20230728",
+  "version": "3.1.20230729",
   "description": "Tiny audio manager for BGM and SE in browser",
   "private": false,
   "homepage": "https://github.com/ayamada/va99",

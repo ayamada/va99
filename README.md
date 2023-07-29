@@ -63,14 +63,10 @@ Obsoleted older works:
 - https://github.com/ayamada/va5
 
 
-# Why this package is in `docs/` directory
-
-It is for github pages ...
-
-
 # ChangeLog
 
-- 3.1.20230730
+- 4.0.20230730
+    - Change distribution directory name
     - Change format of `VA.VER` a bit
 
 - 3.1.20230729

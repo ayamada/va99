@@ -2,11 +2,11 @@
 
 1. Clone this repos and `git checkout dev`
 2. `npm i` or `npm ci`, and `npm outdated`
-3. Edit `docs/va99.js` and `docs/index.html`
+3. Edit `docs/va99.js` and `docs/index.html` (NOT `dist/va99.js`)
 4. Run `npm run http`
 5. Open `http://127.0.0.1:3000/` and check
 6. Edit version in `package.json` if need
-7. Run `npm run make` to make `va99.min.js` and `va99.min.mjs`
+7. Run `npm run make` to make `dist/va99.*`
 8. Edit `docs/index.html` and `README.md` to append changes, and commit
 9. Release and deploy if need
     - `npm publish`

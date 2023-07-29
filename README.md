@@ -21,7 +21,7 @@ You can get this package from https://www.npmjs.com/package/va99
 - Apply to fade-out volume automatically at changing BGM
 - Apply to suppress volume automatically when excess many SE
 - Add AudioContext unlocking handler to screen
-- You can override `loading` function if you want
+- You can override loading function if you want
 - You don't have to display licensing text in production build by Zlib license
 
 
@@ -36,7 +36,7 @@ I think, licensing text is essentially meta information.
 
 It elicit an effect even separated from production, like as warranty card.
 
-
+And more,
 
 I only want to ensure right to use this library for me.
 
@@ -63,12 +63,16 @@ Obsoleted older works:
 - https://github.com/ayamada/va5
 
 
-# Why this package is in `docs/` directory
-
-It is for github pages ...
-
-
 # ChangeLog
+
+- 4.0.20230730
+    - Breaking change: distribution directory name
+    - Change format of `VA.VER` a bit
+
+- 3.1.20230729
+    - Add `VA.C` as an accessor to internal compressor node
+    - Remove `capture` flag from AudioContext-unlocker for iOS
+    - Update some documents
 
 - 3.0.20230728
     - Change initial value of `VA.V` (master volume) from `0.3` to `0.2`
@@ -87,7 +91,7 @@ It is for github pages ...
     - Update some documents
 
 - 2.0.20230721
-    - Change directory name for github pages
+    - Breaking change: directory name for github pages
 
 - 1.0.20230721
     - Initial release

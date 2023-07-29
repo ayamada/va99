@@ -11,6 +11,7 @@ VA.D = function (sourceNode) {};
 
 VA.V;
 VA.A;
+VA.C;
 VA.VER;
 
 VA.P.G;

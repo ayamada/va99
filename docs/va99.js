@@ -92,20 +92,20 @@ VA = (()=> {
   var bgmStartImmediately = (playParams)=> {
     var [audioBuffer, isOneshot, volume, pitch, pan] = playParams;
     var sn = playAudioBuffer(audioBuffer, 1, 1);
-    if (!sn) { bgmStopImmediatelyAndPlayNextBgm(); return }
+    if (!sn) { return bgmStopImmediatelyAndPlayNextBgm() }
     sn.loop = !isOneshot;
     sn.G.gain.value = volume;
     sn.playbackRate.value = pitch;
     var panNode = sn.P?.pan;
     if (panNode) { panNode.value = pan }
     bgmState.playParams = playParams;
-    bgmState.sn = sn;
+    bgmState.sourceNode = sn;
     sn.start();
   };
 
 
   var bgmStopImmediatelyAndPlayNextBgm = ()=> {
-    var sn = bgmState.sn;
+    var sn = bgmState.sourceNode;
     sn && disposeSourceNodeSafely(sn);
     var nextParams = bgmState.nextParams;
     bgmState = {};
@@ -114,7 +114,7 @@ VA = (()=> {
 
 
   var playBgm = (audioBuffer, isOneshot=0, fadeSec=1, pitch=1, volume=1, pan=0)=> {
-    var sn = bgmState.sn;
+    var sn = bgmState.sourceNode;
     var pp = bgmState.playParams;
     if (sn?.buffer && !bgmState.isFading
       && (audioBuffer === pp[0])
@@ -159,7 +159,7 @@ VA = (()=> {
     }, // set master Volume
     get A () { return _audioContext }, // Audio context
     get C () { return _compressorNode }, // Compressor node
-    VER: version,
+    VER: 'va99-' + version,
 
     // sourceNode.G is GainNode, you can change sourceNode.G.gain.value
     // sourceNode.P is StereoPannerNode, you can change sourceNode.P.pan.value

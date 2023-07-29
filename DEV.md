@@ -2,7 +2,7 @@
 
 1. Clone this repos and `git checkout dev`
 2. `npm i` or `npm ci`, and `npm outdated`
-3. Edit `docs/va99.js` and `docs/index.html` (NOT `dist/va99.js`)
+3. Edit `docs/va99.js` (NOT `dist/va99.js` !!!) and `docs/index.html`
 4. Run `npm run http`
 5. Open `http://127.0.0.1:3000/` and check
 6. Edit version in `package.json` if need

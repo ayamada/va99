@@ -66,7 +66,7 @@ Obsoleted older works:
 # ChangeLog
 
 - 4.0.20230730
-    - Change distribution directory name
+    - Breaking change: distribution directory name
     - Change format of `VA.VER` a bit
 
 - 3.1.20230729
@@ -91,7 +91,7 @@ Obsoleted older works:
     - Update some documents
 
 - 2.0.20230721
-    - Change directory name for github pages
+    - Breaking change: directory name for github pages
 
 - 1.0.20230721
     - Initial release

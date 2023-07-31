@@ -65,6 +65,9 @@ Obsoleted older works:
 
 # ChangeLog
 
+- 4.1.20230801
+    - `VA.BGM()` try to load audioBuffer ahead if argument like url
+
 - 4.0.20230730
     - Breaking change: distribution directory name
     - Change format of `VA.VER` a bit

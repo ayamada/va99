@@ -319,7 +319,7 @@ VA.P(audioBuffer, dontStartAutomatically=false, dontReduceVolumeByExcessPlay=fal
 </code>
 <br />
 <br />
-<code translate="no">audioBuffer</code>: If it is null, do nothing, return undefined.
+<code translate="no">audioBuffer</code>: If it is null or undefined, do nothing, return undefined.
 <br />
 <br />
 <code translate="no">dontStartAutomatically</code>: If it is set,
@@ -366,8 +366,7 @@ VA.BGM(audioBuffer, isOneshot=0, fadeSec=1, pitch=1, volume=1, pan=0)
 </code>
 <br />
 <br />
-<code translate="no">audioBuffer</code>: If this is null, do only stop previous BGM with fade-out. Play nothing.
-<br />
+<code translate="no">audioBuffer</code>: If this is null or undefined, do only stop previous BGM with fade-out. Play nothing.
 <br />
 If already playing previous BGM, first,
 finish previous BGM with fade-out,
@@ -375,6 +374,16 @@ and then, it start to play new BGM.
 <br />
 If not playing previous BGM,
 it play new BGM immediately.
+<br />
+<br />
+If audioBuffer is not instance of AudioBuffer, and it is loadable value by VA.L(), VA99 try to load audioBuffer ahead.
+<br />
+So, you can play BGM after loading by below code.
+<br />
+<code class="console" translate="no">VA.BGM("path/to/music.m4a", ... andMoreOptions)</code>
+<br />
+But audioBuffer is not cached in this case.
+If you want to not load each time, you will use VA.L() explicitly please.
 <br />
 <br />
 <code translate="no">isOneshot</code>:
@@ -403,6 +412,8 @@ If not playing previous BGM, play new BGM immediately notwithstanding this.
 <button type="button" onclick="bEval(this)" translate="no">VA.BGM(dandd, false, 1, 1, 1.5)</button> // can set volume over 1.0 but may cause distortion
 <br />
 <button type="button" onclick="bEval(this)" translate="no">VA.BGM(null, false, 3)</button> // stop previous BGM with long fade-out
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.BGM("audio/cntr2.m4a")</button> // play BGM from URL (but audioBuffer is not cached)
 
 
 <h3 translate="no">VA.D()</h3>

@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '4.0.20230730'; /* auto-updated */
+  const version = '4.1.20230801'; /* auto-updated */
 
 
   // I want to prepare instance of AudioContext lazily,
@@ -87,10 +87,11 @@ VA = (()=> {
 
 
   var bgmState = {};
+  var bgmSerial = 0;
 
 
   var bgmStartImmediately = (playParams)=> {
-    var [audioBuffer, isOneshot, volume, pitch, pan] = playParams;
+    var [key, audioBuffer, isOneshot, volume, pitch, pan] = playParams;
     var sn = playAudioBuffer(audioBuffer, 1, 1);
     if (!sn) { return bgmStopImmediatelyAndPlayNextBgm() }
     sn.loop = !isOneshot;
@@ -113,29 +114,40 @@ VA = (()=> {
   };
 
 
-  var playBgm = (audioBuffer, isOneshot=0, fadeSec=1, pitch=1, volume=1, pan=0)=> {
+  var playBgm = (audioBuffer, isOneshot=0, fadeSec=1, pitch=1, volume=1, pan=0, _key=undefined)=> {
+    _key ??= audioBuffer;
     var sn = bgmState.sourceNode;
     var pp = bgmState.playParams;
     if (sn?.buffer && !bgmState.isFading
-      && (audioBuffer === pp[0])
-      && (isOneshot == pp[1])
-      && (volume == pp[2])
-      && (pitch == pp[3])
-      && (pan == pp[4])) {
+      && (_key === pp[0])
+      && (isOneshot == pp[2])
+      && (volume == pp[3])
+      && (pitch == pp[4])
+      && (pan == pp[5])) {
       // already playing same bgm, nothing changed
       return;
     }
+
+    bgmSerial++;
+    // if audioBuffer is not instanceof AudioBuffer, try to VA.L() first
+    if (audioBuffer != null && !isAudioBuffer(audioBuffer)) {
+      playBgm(...[,,fadeSec]);
+      var expectedSerial = bgmSerial;
+      _va.L(audioBuffer).then((ab)=> ab && (expectedSerial == bgmSerial) && playBgm(ab, isOneshot, fadeSec, pitch, volume, pan, _key));
+      return;
+    }
+
     // reserve (or update) next bgm
-    bgmState.nextParams = audioBuffer ? [audioBuffer, isOneshot, volume, pitch, pan] : null;
+    bgmState.nextParams = audioBuffer ? [_key, audioBuffer, isOneshot, volume, pitch, pan] : null;
     if (bgmState.isFading) { return }
     if (!(sn?.buffer) || !sn.G || !fadeSec) { return bgmStopImmediatelyAndPlayNextBgm() }
+
     // start fading
     bgmState.isFading = true;
     var intervalMsec = fadeSec * 99;
     var decGain = sn.G.gain.value / 9;
     var tick = ()=> (((sn.G.gain.value -= decGain) <= 0) || !sn.buffer) ? bgmStopImmediatelyAndPlayNextBgm() : setTimeout(tick, intervalMsec);
     setTimeout(tick, intervalMsec);
-
   };
 
 
@@ -146,7 +158,7 @@ VA = (()=> {
   ["click", "touchstart", "touchend"].forEach((k)=> document.addEventListener(k, (() => playAudioBuffer(_audioContext.createBuffer(1, 2, _audioContext.sampleRate), 0, 1)), {once: true}));
 
 
-  return {
+  var _va = {
     L: asyncLoadAudioBuffer, // *async* Load audioBuffer from audio-url
     P: playAudioBuffer, // Play audioBuffer, return sourceNode
     BGM: playBgm, // play audioBuffer as BGM
@@ -165,4 +177,6 @@ VA = (()=> {
     // sourceNode.P is StereoPannerNode, you can change sourceNode.P.pan.value
     // (but it is not exists in iOS earlier 2021/04)
   };
+
+  return _va;
 })();

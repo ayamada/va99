@@ -479,27 +479,21 @@ But you should beware unlocking AudioContext (See FAQ).
 <button type="button" onclick="bEval(this)" translate="no">console.log(VA.A.currentTime)</button>
 
 
-<h3 translate="no">VA.C</h3>
+<h3 translate="no">VA.I()</h3>
 
 <div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
-    <span translate="no"><code>C</code> is for <code>Compressor</code>.</span>
+    <span translate="no"><code>I</code> is for <code>Interpolate</code>.</span>
 <br />
-It is a property, not a function.
+Interpolate extra node between masterGainNode and ac.destination, or remove it.
 <br />
-You can access to instance of <a href="https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/createDynamicsCompressor" target="_blank" rel="noopener noreferrer">DynamicsCompressorNode</a> in VA99 internal.
+It can keep only one extra node.
 <br />
-If you want to maximize volume, you should tweak it.
-<br />
-It is sufficient without modifications for routine use.
+It is rarely used.
 </span></div>
 
-<button type="button" onclick="bEval(this)" translate="no">console.log(VA.C)</button>
+<button type="button" onclick="bEval(this)" translate="no">VA.I(VA.A.createDynamicsCompressor())</button> // interpolate extra node between masterGainNode and ac.destination
 <br />
-<button type="button" onclick="bEval(this)" translate="no">VA.C.threshold.value = -1</button>
-<br />
-<button type="button" onclick="bEval(this)" translate="no">VA.C.threshold.value = -50</button>
-<br />
-<button type="button" onclick="bEval(this)" translate="no">VA.V = 1.5; VA.P(kick); VA.P(unidentified)</button>
+<button type="button" onclick="bEval(this)" translate="no">VA.I()</button> // remove interpolated node
 
 
 <h3 translate="no">VA.VER</h3>

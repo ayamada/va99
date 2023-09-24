@@ -65,6 +65,9 @@ Obsoleted older works:
 
 # ChangeLog
 
+- 5.1.20230925
+    - Follow to forgot to update va99.externs.js
+
 - 5.0.20230925
     - Deprecated and deleted `VA.C` and internal compressor node
     - Add `VA.I()` to interpolate extra node if you want

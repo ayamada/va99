@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '4.1.20230804'; /* auto-updated */
+  const version = '4.1.20230925'; /* auto-updated */
 
 
   // I want to prepare instance of AudioContext lazily,
@@ -18,15 +18,22 @@ VA = (()=> {
 
 
   var _masterGainNode = _audioContext.createGain();
-  var _compressorNode = _audioContext.createDynamicsCompressor();
   var _masterVolume = _masterGainNode.gain.value = 0.2;
-  var setupMasterGainNode = () => {
-    // This settings is for html5 games
-    //_compressorNode.threshold.value = -12;
-    //_compressorNode.knee.value = 6;
-    //_compressorNode.ratio.value = 6;
-    _compressorNode.release.value = 0.01;
-    _masterGainNode.connect(_compressorNode).connect(_audioContext.destination);
+  var _extraNode;
+  var interpolate = (extraNode=undefined) => {
+    // Disconnect old connections at first
+    if (_extraNode) {
+      _masterGainNode.disconnect();
+      _extraNode.disconnect();
+    } else {
+      _masterGainNode.disconnect();
+    }
+    _extraNode = extraNode;
+    if (extraNode) {
+      _masterGainNode.connect(extraNode).connect(_audioContext.destination);
+    } else {
+      _masterGainNode.connect(_audioContext.destination);
+    }
   }
 
 
@@ -151,7 +158,7 @@ VA = (()=> {
   };
 
 
-  setupMasterGainNode();
+  interpolate();
 
 
   // unlock AudioContext for iOS
@@ -163,6 +170,7 @@ VA = (()=> {
     P: playAudioBuffer, // Play audioBuffer, return sourceNode
     BGM: playBgm, // play audioBuffer as BGM
     D: disposeSourceNodeSafely, // stop and Dispose played sourceNode safely
+    I: interpolate, // Interpolate extra node between masterGainNode and ac.destination
 
     get V () { return _masterVolume }, // get master Volume
     set V (v) {
@@ -170,7 +178,6 @@ VA = (()=> {
       if (_masterGainNode) { _masterGainNode.gain.value = v }
     }, // set master Volume
     get A () { return _audioContext }, // Audio context
-    get C () { return _compressorNode }, // Compressor node
     VER: 'va99-' + version,
 
     // sourceNode.G is GainNode, you can change sourceNode.G.gain.value

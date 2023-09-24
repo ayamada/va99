@@ -65,6 +65,10 @@ Obsoleted older works:
 
 # ChangeLog
 
+- 4.2.20230925
+    - Deprecated and deleted `VA.C` and internal compressor node
+    - Add `VA.I()` to interpolate extra node if you want
+
 - 4.1.20230801
     - `VA.BGM()` try to load audioBuffer ahead if argument like url
 

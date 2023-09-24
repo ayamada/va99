@@ -158,7 +158,7 @@ VA = (()=> {
   };
 
 
-  interpolate();
+  interpolate(0);
 
 
   // unlock AudioContext for iOS

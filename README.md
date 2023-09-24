@@ -65,7 +65,7 @@ Obsoleted older works:
 
 # ChangeLog
 
-- 4.2.20230925
+- 5.0.20230925
     - Deprecated and deleted `VA.C` and internal compressor node
     - Add `VA.I()` to interpolate extra node if you want
 

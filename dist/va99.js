@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '4.1.20230925'; /* auto-updated */
+  const version = '5.0.20230925'; /* auto-updated */
 
 
   // I want to prepare instance of AudioContext lazily,
@@ -138,7 +138,7 @@ VA = (()=> {
     bgmSerial++;
     // if audioBuffer is not instanceof AudioBuffer, try to VA.L() first
     if (audioBuffer != null && !isAudioBuffer(audioBuffer)) {
-      playBgm(...[,,fadeSec]);
+      playBgm(null, false, fadeSec); // Stop bgm at first
       var expectedSerial = bgmSerial;
       _va.L(audioBuffer).then((ab)=> ab && (expectedSerial == bgmSerial) && playBgm(ab, isOneshot, fadeSec, pitch, volume, pan, _key));
       return;

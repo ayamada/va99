@@ -65,6 +65,10 @@ Obsoleted older works:
 
 # ChangeLog
 
+- 5.2.20231107
+    - Resume automatically from interruped by iOS
+      (See https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/state#resuming_interrupted_play_states_in_ios_safari )
+
 - 5.1.20230925
     - Follow to forgot to update va99.externs.js
 

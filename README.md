@@ -65,6 +65,9 @@ Obsoleted older works:
 
 # ChangeLog
 
+- 5.3.20231110
+    - Resume from interruped in iOS by touch actions, not automatically now
+
 - 5.2.20231107
     - Resume automatically from interruped by iOS
       (See https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/state#resuming_interrupted_play_states_in_ios_safari )

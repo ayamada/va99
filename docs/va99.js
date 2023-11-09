@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '5.2.20231107'; /* auto-updated */
+  const version = '5.3.20231110'; /* auto-updated */
 
 
   // I want to prepare instance of AudioContext lazily,
@@ -11,7 +11,8 @@ VA = (()=> {
   var _audioContext = new (self.AudioContext||self.webkitAudioContext);
   var unlockAudioContext = ()=> {
     // unlock AudioContext for chromium and firefox
-    if (_audioContext.state == "suspended") {
+    // and resume from interrupted for iOS
+    if ((_audioContext.state == "suspended")||(_audioContext.state == "interrupted")) {
       try { _audioContext.resume() } catch (e) {};
     }
   };
@@ -161,16 +162,9 @@ VA = (()=> {
   interpolate(0);
 
 
-  // unlock AudioContext for iOS
-  ["click", "touchstart", "touchend"].forEach((k)=> document.addEventListener(k, (() => playAudioBuffer(_audioContext.createBuffer(1, 2, _audioContext.sampleRate), 0, 1)), {once: true}));
-
-
-  // resume automatically from interrupted by iOS
-  var resumeRepeatedlyFromInterrupted = () => {
-    setTimeout(resumeRepeatedlyFromInterrupted, 999);
-    if (_audioContext.state == 'interrupted') { _audioContext.resume() }
-  };
-  resumeRepeatedlyFromInterrupted();
+  // unlock AudioContext and resume from interrupted by touch actions for iOS
+  var silence = _audioContext.createBuffer(1, 2, _audioContext.sampleRate);
+  ["touchstart", "touchend"].forEach((k)=> document.addEventListener(k, (() => playAudioBuffer(silence, 0, 1))));
 
 
   var _va = {

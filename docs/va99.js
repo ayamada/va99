@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '5.3.20231110'; /* auto-updated */
+  const version = '5.3.20240316'; /* auto-updated */
 
 
   // I want to prepare instance of AudioContext lazily,
@@ -83,7 +83,15 @@ VA = (()=> {
       if (!dontReduceVolumeByExcessPlay) {
         for (var i = playingStack.length-1; 0 <= i; i--) {
           var [oldAb, oldSn] = playingStack[i];
-          if (oldAb === audioBuffer) { oldSn.G.gain.value /= 2 }
+          if (
+            // prevent huge volume by same many SE
+            (oldAb === audioBuffer)
+            ||
+            // prevent huge volume by many SE before unlocking
+            (_audioContext.state == "suspended")
+          ) {
+            oldSn.G.gain.value /= 2;
+          }
           if (!oldSn.buffer) { playingStack.splice(i, 1) }
         }
         playingStack.push([audioBuffer, sourceNode]);

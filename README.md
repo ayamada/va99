@@ -65,6 +65,9 @@ Obsoleted older works:
 
 # ChangeLog
 
+- 5.3.20240316
+    - Prevent huge volume by play many SE before unlocking on chrome
+
 - 5.3.20231110
     - Resume from interruped in iOS by touch actions, not automatically now
 

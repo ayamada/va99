@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '5.3.20240316'; /* auto-updated */
+  const version = '5.4.20241208'; /* auto-updated */
 
 
   // I want to prepare instance of AudioContext lazily,
@@ -107,7 +107,7 @@ VA = (()=> {
 
 
   var bgmStartImmediately = (playParams)=> {
-    var [key, audioBuffer, isOneshot, volume, pitch, pan] = playParams;
+    var [audioBuffer, isOneshot, fadeSec, pitch, volume, pan, key] = playParams;
     var sn = playAudioBuffer(audioBuffer, 1, 1);
     if (!sn) { return bgmStopImmediatelyAndPlayNextBgm() }
     sn.loop = !isOneshot;
@@ -130,18 +130,29 @@ VA = (()=> {
   };
 
 
-  var playBgm = (audioBuffer, isOneshot=0, fadeSec=1, pitch=1, volume=1, pan=0, _key=false)=> {
-    _key ||= audioBuffer;
+  var isEqualsTwoArrays = (arr1, arr2)=> (arr1.length == arr2.length) && arr1.every((v, i) => (v === arr2[i]));
+
+
+  var playBgm = (audioBuffer, isOneshot=0, fadeSec=1, pitch=1, volume=1, pan=0)=> {
+    var playBgmArgs = [audioBuffer, isOneshot, fadeSec, pitch, volume, pan];
+
     var sn = bgmState.sourceNode;
     var pp = bgmState.playParams;
-    if (sn?.buffer && !bgmState.isFading
-      && (_key === pp[0])
-      && (isOneshot == pp[2])
-      && (volume == pp[3])
-      && (pitch == pp[4])
-      && (pan == pp[5])) {
+    var isAlreadyPlayingBgm = (sn?.buffer && !bgmState.isFading && pp);
+
+    var resumeParams; // playBgm returns resumeParams
+    if (audioBuffer == null) {
+      // set resumeParams to args for resume bgm
+      if (bgmState.nextParams) {
+        resumeParams = [... bgmState.nextParams];
+      } else if (isAlreadyPlayingBgm) {
+        resumeParams = [... pp];
+      }
+    }
+
+    if (isAlreadyPlayingBgm && isEqualsTwoArrays(playBgmArgs, pp)) {
       // already playing same bgm, nothing changed
-      return;
+      return resumeParams;
     }
 
     bgmSerial++;
@@ -149,14 +160,17 @@ VA = (()=> {
     if (audioBuffer != null && !isAudioBuffer(audioBuffer)) {
       playBgm(null, false, fadeSec); // Stop bgm at first
       var expectedSerial = bgmSerial;
-      _va.L(audioBuffer).then((ab)=> ab && (expectedSerial == bgmSerial) && playBgm(ab, isOneshot, fadeSec, pitch, volume, pan, _key));
-      return;
+      _va.L(audioBuffer).then((ab)=> ab && (expectedSerial == bgmSerial) && playBgm(ab, isOneshot, fadeSec, pitch, volume, pan));
+      return resumeParams;
     }
 
     // reserve (or update) next bgm
-    bgmState.nextParams = audioBuffer ? [_key, audioBuffer, isOneshot, volume, pitch, pan] : null;
-    if (bgmState.isFading) { return }
-    if (!(sn?.buffer) || !sn.G || !fadeSec) { return bgmStopImmediatelyAndPlayNextBgm() }
+    bgmState.nextParams = audioBuffer ? playBgmArgs : null;
+    if (bgmState.isFading) { return resumeParams }
+    if (!(sn?.buffer) || !sn.G || !fadeSec) {
+      bgmStopImmediatelyAndPlayNextBgm();
+      return resumeParams;
+    }
 
     // start fading
     bgmState.isFading = true;
@@ -164,15 +178,24 @@ VA = (()=> {
     var decGain = sn.G.gain.value / 9;
     var tick = ()=> (((sn.G.gain.value -= decGain) <= 0) || !sn.buffer) ? bgmStopImmediatelyAndPlayNextBgm() : setTimeout(tick, intervalMsec);
     setTimeout(tick, intervalMsec);
+    return resumeParams;
   };
 
 
   interpolate(0);
 
 
-  // unlock AudioContext and resume from interrupted by touch actions for iOS
   var silence = _audioContext.createBuffer(1, 2, _audioContext.sampleRate);
-  ["touchstart", "touchend"].forEach((k)=> document.addEventListener(k, (() => playAudioBuffer(silence, 0, 1))));
+  // unlock AudioContext and resume from interrupted by click for PC browsers
+  var clickHandle = () => {
+    playAudioBuffer(silence, 0, 1);
+    document.removeEventListener("click", clickHandle);
+  };
+  document.addEventListener("click", clickHandle);
+  // unlock AudioContext and resume from interrupted by touch actions for iOS
+  // should not remove handle by removeEventListener
+  // (in iOS, AudioContext may unlocks again by OS)
+  ["touchstart", "touchend"].forEach((k)=> document.addEventListener(k, ()=> playAudioBuffer(silence, 0, 1)));
 
 
   var _va = {

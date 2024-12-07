@@ -1,6 +1,6 @@
 {
   "name": "va99",
-  "version": "5.3.20240316",
+  "version": "5.4.20241208",
   "description": "Tiny audio manager for BGM and SE in browser",
   "private": false,
   "homepage": "https://github.com/ayamada/va99",
@@ -15,9 +15,9 @@
     "dist/"
   ],
   "devDependencies": {
-    "google-closure-compiler": "20231112.0.0",
+    "google-closure-compiler": "20240317.0.0",
     "http-server": "14.1.1",
-    "rimraf": "5.0.5"
+    "rimraf": "6.0.1"
   },
   "scripts": {
     "update-version": "node scripts/update-version.js docs/va99.js",

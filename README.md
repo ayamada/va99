@@ -65,6 +65,10 @@ Obsoleted older works:
 
 # ChangeLog
 
+- 5.4.20241208
+    - Improve to unlock AudioContext for PC browsers
+    - VA.BGM() returns args for resume BGM if stopping BGM
+
 - 5.3.20240316
     - Prevent huge volume by play many SE before unlocking on chrome
 

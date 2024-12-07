@@ -428,11 +428,11 @@ If not playing previous BGM, play new BGM immediately notwithstanding this.
 <br />
 <code class="console" translate="no">
 var r
-r = VA.BGM(cntr2, true, 1, 0.5) // returns undefined
+r = VA.BGM(cntr2, true, 1, 0.5) // play BGM and returns []
 // wait a minute
 r = VA.BGM() // stop BGM and returns arguments for resume BGM
 // wait a minute
-VA.BGM(... r) // resume previous BGM
+r = VA.BGM(... r) // resume previous BGM and returns []
 
 </code>
 </span></div>

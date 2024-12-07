@@ -140,7 +140,7 @@ VA = (()=> {
     var pp = bgmState.playParams;
     var isAlreadyPlayingBgm = (sn?.buffer && !bgmState.isFading && pp);
 
-    var resumeParams; // playBgm returns resumeParams
+    var resumeParams = []; // playBgm returns resumeParams
     if (audioBuffer == null) {
       // set resumeParams to args for resume bgm
       if (bgmState.nextParams) {

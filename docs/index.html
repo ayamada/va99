@@ -422,6 +422,20 @@ If not playing previous BGM, play new BGM immediately notwithstanding this.
 <br />
 <button type="button" onclick="bEval(this)" translate="no">VA.BGM("audio/cntr2.m4a")</button> // play BGM from URL (but audioBuffer is not cached)
 
+<div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
+    <span translate="no">VA.BGM()</span> returns arguments for resume BGM, if stopping.
+<br />
+<br />
+<code class="console" translate="no">
+var r
+r = VA.BGM(cntr2, true, 1, 0.5) // returns undefined
+// wait a minute
+r = VA.BGM() // stop BGM and returns arguments for resume BGM
+// wait a minute
+VA.BGM(... r) // resume previous BGM
+
+</code>
+</span></div>
 
 <h3 translate="no">VA.D()</h3>
 

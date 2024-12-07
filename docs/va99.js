@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '5.3.20240316'; /* auto-updated */
+  const version = '5.4.20241208'; /* auto-updated */
 
 
   // I want to prepare instance of AudioContext lazily,
@@ -185,16 +185,17 @@ VA = (()=> {
   interpolate(0);
 
 
-  // unlock AudioContext and resume from interrupted by touch actions for iOS
   var silence = _audioContext.createBuffer(1, 2, _audioContext.sampleRate);
-  ["click", "touchstart", "touchend"].forEach((k)=> {
-    let handle = () => {
-      unlockAudioContext();
-      playAudioBuffer(silence, 0, 1);
-      document.removeEventListener(k, handle);
-    };
-    document.addEventListener(k, handle);
-  });
+  // unlock AudioContext and resume from interrupted by click for PC browsers
+  var clickHandle = () => {
+    playAudioBuffer(silence, 0, 1);
+    document.removeEventListener("click", clickHandle);
+  };
+  document.addEventListener("click", clickHandle);
+  // unlock AudioContext and resume from interrupted by touch actions for iOS
+  // should not remove handle by removeEventListener
+  // (in iOS, AudioContext may unlocks again by OS)
+  ["touchstart", "touchend"].forEach((k)=> document.addEventListener(k, ()=> playAudioBuffer(silence, 0, 1)));
 
 
   var _va = {

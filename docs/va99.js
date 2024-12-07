@@ -187,7 +187,14 @@ VA = (()=> {
 
   // unlock AudioContext and resume from interrupted by touch actions for iOS
   var silence = _audioContext.createBuffer(1, 2, _audioContext.sampleRate);
-  ["touchstart", "touchend"].forEach((k)=> document.addEventListener(k, (() => playAudioBuffer(silence, 0, 1))));
+  ["click", "touchstart", "touchend"].forEach((k)=> {
+    let handle = () => {
+      unlockAudioContext();
+      playAudioBuffer(silence, 0, 1);
+      document.removeEventListener(k, handle);
+    };
+    document.addEventListener(k, handle);
+  });
 
 
   var _va = {

@@ -1,6 +1,9 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '5.4.20241208'; /* auto-updated */
+  const version = '5.5.20250816'; /* auto-updated */
+
+
+  const stateSuspended = "suspended";
 
 
   // I want to prepare instance of AudioContext lazily,
@@ -12,7 +15,7 @@ VA = (()=> {
   var unlockAudioContext = ()=> {
     // unlock AudioContext for chromium and firefox
     // and resume from interrupted for iOS
-    if ((_audioContext.state == "suspended")||(_audioContext.state == "interrupted")) {
+    if ((_audioContext.state == stateSuspended)||(_audioContext.state == "interrupted")) {
       try { _audioContext.resume() } catch (e) {};
     }
   };
@@ -76,7 +79,7 @@ VA = (()=> {
 
 
   var playingStack = [];
-  var playAudioBuffer = (audioBuffer, dontStartAutomatically=0, dontReduceVolumeByExcessPlay=0)=> {
+  var playAudioBufferInternal = (audioBuffer, asBgm, dontReduceVolumeByExcessPlay)=> {
     unlockAudioContext(); // unlock, first
     if (isAudioBuffer(audioBuffer)) {
       var sourceNode = prepareSourceNode(audioBuffer);
@@ -88,7 +91,7 @@ VA = (()=> {
             (oldAb === audioBuffer)
             ||
             // prevent huge volume by many SE before unlocking
-            (_audioContext.state == "suspended")
+            (_audioContext.state == stateSuspended)
           ) {
             oldSn.G.gain.value /= 2;
           }
@@ -96,10 +99,14 @@ VA = (()=> {
         }
         playingStack.push([audioBuffer, sourceNode]);
       }
-      if (!dontStartAutomatically) { sourceNode.start() }
+      if (!asBgm) { sourceNode.start() }
+      if ((!asBgm) && (_audioContext.state == stateSuspended)) {
+        setTimeout(() => ((_audioContext.state == stateSuspended) && disposeSourceNodeSafely(sourceNode)), 999);
+      }
       return sourceNode;
     }
   };
+  var playSe = (audioBuffer)=> playAudioBufferInternal(audioBuffer, 0, 0);
 
 
   var bgmState = {};
@@ -108,7 +115,7 @@ VA = (()=> {
 
   var bgmStartImmediately = (playParams)=> {
     var [audioBuffer, isOneshot, fadeSec, pitch, volume, pan, key] = playParams;
-    var sn = playAudioBuffer(audioBuffer, 1, 1);
+    var sn = playAudioBufferInternal(audioBuffer, 1, 1);
     if (!sn) { return bgmStopImmediatelyAndPlayNextBgm() }
     sn.loop = !isOneshot;
     sn.G.gain.value = volume;
@@ -188,19 +195,19 @@ VA = (()=> {
   var silence = _audioContext.createBuffer(1, 2, _audioContext.sampleRate);
   // unlock AudioContext and resume from interrupted by click for PC browsers
   var clickHandle = () => {
-    playAudioBuffer(silence, 0, 1);
+    playAudioBufferInternal(silence, 0, 1);
     document.removeEventListener("click", clickHandle);
   };
   document.addEventListener("click", clickHandle);
   // unlock AudioContext and resume from interrupted by touch actions for iOS
   // should not remove handle by removeEventListener
   // (in iOS, AudioContext may unlocks again by OS)
-  ["touchstart", "touchend"].forEach((k)=> document.addEventListener(k, ()=> playAudioBuffer(silence, 0, 1)));
+  ["touchstart", "touchend"].forEach((k)=> document.addEventListener(k, ()=> playAudioBufferInternal(silence, 0, 1)));
 
 
   var _va = {
     L: asyncLoadAudioBuffer, // *async* Load audioBuffer from audio-url
-    P: playAudioBuffer, // Play audioBuffer, return sourceNode
+    P: playSe, // Play audioBuffer, return sourceNode (or undefined, when could not play)
     BGM: playBgm, // play audioBuffer as BGM
     D: disposeSourceNodeSafely, // stop and Dispose played sourceNode safely
     I: interpolate, // Interpolate extra node between masterGainNode and ac.destination

@@ -65,6 +65,10 @@ Obsoleted older works:
 
 # ChangeLog
 
+- 5.5.20250816
+    - `VA.P()` does NOT reserve to play SE in before unlock AudioContext
+      (but `VA.BGM()` reserve to play BGM in before unlock AudioContext)
+
 - 5.4.20241209
     - `VA.BGM()` returns `[]` if playing BGM
 

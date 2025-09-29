@@ -152,6 +152,10 @@ VA = (()=> {
 
 
   var playBgm = (audioBuffer, isOneshot=0, fadeSec=1, pitch=1, volume=1, pan=0)=> {
+    if (audioBuffer != null && !isAudioBuffer(audioBuffer)) {
+      var cachedAb = referCachedBgmAb(audioBuffer);
+      if (cachedAb) { audioBuffer = cachedAb }
+    }
     var playBgmArgs = [audioBuffer, isOneshot, fadeSec, pitch, volume, pan];
 
     var sn = bgmState.sourceNode;
@@ -178,9 +182,7 @@ VA = (()=> {
     if (audioBuffer != null && !isAudioBuffer(audioBuffer)) {
       playBgm(null, false, fadeSec); // Stop bgm at first
       var expectedSerial = bgmSerial;
-      var cachedAb = referCachedBgmAb(audioBuffer);
-      var loading = cachedAb ? (new Promise((res) => res(cachedAb))) : _va.L(audioBuffer);
-      loading.then((ab)=> (ab && ((cachedAb || pushCachedBgmAb(audioBuffer, ab)), ((expectedSerial == bgmSerial) && playBgm(ab, isOneshot, fadeSec, pitch, volume, pan)))));
+      _va.L(audioBuffer).then((ab)=> (ab && ((cachedAb || pushCachedBgmAb(audioBuffer, ab)), ((expectedSerial == bgmSerial) && playBgm(ab, isOneshot, fadeSec, pitch, volume, pan)))));
       return resumeParams;
     }
 

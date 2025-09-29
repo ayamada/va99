@@ -13,6 +13,7 @@ VA.I = function (var_args) {};
 VA.V;
 VA.A;
 VA.VER;
+VA.BCL;
 
 VA.P.G;
 VA.P.P;

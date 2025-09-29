@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '5.5.20250816'; /* auto-updated */
+  const version = '5.6.20250929'; /* auto-updated */
 
 
   const stateSuspended = "suspended";
@@ -140,7 +140,22 @@ VA = (()=> {
   var isEqualsTwoArrays = (arr1, arr2)=> (arr1.length == arr2.length) && arr1.every((v, i) => (v === arr2[i]));
 
 
+  var cachedBgmAbList = [];
+  var referCachedBgmAb = (k) => cachedBgmAbList.find(([k2]) => (k === k2))?.[1];
+  var pushCachedBgmAb = (k, ab) => {
+    // it is naive, can shortcut it crudely
+    //var alreadyExistIdx = cachedBgmAbList.findIndex(([k2]) => (k === k2));
+    //if (alreadyExistIdx != -1) { cachedBgmAbList.splice(alreadyExistIdx, 1) }
+    cachedBgmAbList.unshift([k, ab]);
+    cachedBgmAbList.length = Math.min(cachedBgmAbList.length, _va.BCL);
+  };
+
+
   var playBgm = (audioBuffer, isOneshot=0, fadeSec=1, pitch=1, volume=1, pan=0)=> {
+    if (audioBuffer != null && !isAudioBuffer(audioBuffer)) {
+      var cachedAb = referCachedBgmAb(audioBuffer);
+      if (cachedAb) { audioBuffer = cachedAb }
+    }
     var playBgmArgs = [audioBuffer, isOneshot, fadeSec, pitch, volume, pan];
 
     var sn = bgmState.sourceNode;
@@ -167,7 +182,7 @@ VA = (()=> {
     if (audioBuffer != null && !isAudioBuffer(audioBuffer)) {
       playBgm(null, false, fadeSec); // Stop bgm at first
       var expectedSerial = bgmSerial;
-      _va.L(audioBuffer).then((ab)=> ab && (expectedSerial == bgmSerial) && playBgm(ab, isOneshot, fadeSec, pitch, volume, pan));
+      _va.L(audioBuffer).then((ab)=> (ab && ((cachedAb || pushCachedBgmAb(audioBuffer, ab)), ((expectedSerial == bgmSerial) && playBgm(ab, isOneshot, fadeSec, pitch, volume, pan)))));
       return resumeParams;
     }
 
@@ -219,6 +234,7 @@ VA = (()=> {
     }, // set master Volume
     get A () { return _audioContext }, // Audio context
     VER: 'va99-' + version,
+    BCL: 2, // BGM cache limit
 
     // sourceNode.G is GainNode, you can change sourceNode.G.gain.value
     // sourceNode.P is StereoPannerNode, you can change sourceNode.P.pan.value

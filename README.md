@@ -65,6 +65,10 @@ Obsoleted older works:
 
 # ChangeLog
 
+- 5.6.20250929
+    - `VA.BGM(path)` caching AudioContext now, but it is in limited quantity (max quantity by `VA.BCL`)
+    - `VA.BGM(path)` recognize same BGM now
+
 - 5.5.20250816
     - `VA.P()` does NOT reserve to play SE in before unlock AudioContext
       (but `VA.BGM()` reserve to play BGM in before unlock AudioContext)

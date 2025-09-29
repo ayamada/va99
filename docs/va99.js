@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '5.5.20250929'; /* auto-updated */
+  const version = '5.6.20250929'; /* auto-updated */
 
 
   const stateSuspended = "suspended";

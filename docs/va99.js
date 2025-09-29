@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '5.5.20250816'; /* auto-updated */
+  const version = '5.5.20250929'; /* auto-updated */
 
 
   const stateSuspended = "suspended";
@@ -180,7 +180,7 @@ VA = (()=> {
       var expectedSerial = bgmSerial;
       var cachedAb = referCachedBgmAb(audioBuffer);
       var loading = cachedAb ? (new Promise((res) => res(cachedAb))) : _va.L(audioBuffer);
-      loading.then((ab)=> (ab && (pushCachedBgmAb(audioBuffer, ab), ((expectedSerial == bgmSerial) && playBgm(ab, isOneshot, fadeSec, pitch, volume, pan)))));
+      loading.then((ab)=> (ab && ((cachedAb || pushCachedBgmAb(audioBuffer, ab)), ((expectedSerial == bgmSerial) && playBgm(ab, isOneshot, fadeSec, pitch, volume, pan)))));
       return resumeParams;
     }
 

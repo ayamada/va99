@@ -140,6 +140,17 @@ VA = (()=> {
   var isEqualsTwoArrays = (arr1, arr2)=> (arr1.length == arr2.length) && arr1.every((v, i) => (v === arr2[i]));
 
 
+  var cachedBgmAbList = [];
+  var referCachedBgmAb = (k) => cachedBgmAbList.find(([k2]) => (k === k2))?.[1];
+  var pushCachedBgmAb = (k, ab) => {
+    // it is naive, can shortcut it crudely
+    //var alreadyExistIdx = cachedBgmAbList.findIndex(([k2]) => (k === k2));
+    //if (alreadyExistIdx != -1) { cachedBgmAbList.splice(alreadyExistIdx, 1) }
+    cachedBgmAbList.unshift([k, ab]);
+    cachedBgmAbList.length = Math.min(cachedBgmAbList.length, _va.BCL);
+  };
+
+
   var playBgm = (audioBuffer, isOneshot=0, fadeSec=1, pitch=1, volume=1, pan=0)=> {
     var playBgmArgs = [audioBuffer, isOneshot, fadeSec, pitch, volume, pan];
 
@@ -167,7 +178,9 @@ VA = (()=> {
     if (audioBuffer != null && !isAudioBuffer(audioBuffer)) {
       playBgm(null, false, fadeSec); // Stop bgm at first
       var expectedSerial = bgmSerial;
-      _va.L(audioBuffer).then((ab)=> ab && (expectedSerial == bgmSerial) && playBgm(ab, isOneshot, fadeSec, pitch, volume, pan));
+      var cachedAb = referCachedBgmAb(audioBuffer);
+      var loading = cachedAb ? (new Promise((res) => res(cachedAb))) : _va.L(audioBuffer);
+      loading.then((ab)=> (ab && (pushCachedBgmAb(audioBuffer, ab), ((expectedSerial == bgmSerial) && playBgm(ab, isOneshot, fadeSec, pitch, volume, pan)))));
       return resumeParams;
     }
 
@@ -219,6 +232,7 @@ VA = (()=> {
     }, // set master Volume
     get A () { return _audioContext }, // Audio context
     VER: 'va99-' + version,
+    BCL: 2, // BGM cache limit
 
     // sourceNode.G is GainNode, you can change sourceNode.G.gain.value
     // sourceNode.P is StereoPannerNode, you can change sourceNode.P.pan.value

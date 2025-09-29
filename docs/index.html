@@ -389,8 +389,9 @@ So, you can play BGM after loading by below code.
 <br />
 <code class="console" translate="no">VA.BGM("path/to/music.m4a", ... andMoreOptions)</code>
 <br />
-But audioBuffer is not cached in this case.
-If you want to not load each time, you will use VA.L() explicitly please.
+AudioBuffer will be load from path, and cached, but it cached in limited quantity (see <code translate="no">VA.BCL</code>).
+<br />
+If you want to control completely to cache mechanism, you will use <code translate="no">VA.L()</code> explicitly please.
 <br />
 <br />
 <code translate="no">isOneshot</code>:
@@ -420,7 +421,7 @@ If not playing previous BGM, play new BGM immediately notwithstanding this.
 <br />
 <button type="button" onclick="bEval(this)" translate="no">VA.BGM(null, false, 3)</button> // stop previous BGM with long fade-out
 <br />
-<button type="button" onclick="bEval(this)" translate="no">VA.BGM("audio/cntr2.m4a")</button> // play BGM from URL (but audioBuffer is not cached)
+<button type="button" onclick="bEval(this)" translate="no">VA.BGM("audio/cntr2.m4a")</button> // play BGM from URL or path
 
 <div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
     <span translate="no">VA.BGM()</span> returns arguments for resume BGM, if stopping.
@@ -528,6 +529,21 @@ It is rarely used.
 </span></div>
 
 <button type="button" onclick="bEval(this)" translate="no">console.log(VA.VER)</button>
+
+
+<h3 translate="no">VA.BCL</h3>
+
+<div><span class="message-ulv"><img src="img/ulv.gif" class="face" />
+It is a property, not a function.
+<br />
+You get/set a max limit of list of cached AudioBuffer for BGM.
+<br />
+It is rarely used.
+</span></div>
+
+<button type="button" onclick="bEval(this)" translate="no">console.log(VA.BCL)</button>
+<br />
+<button type="button" onclick="bEval(this)" translate="no">VA.BCL = 0</button>
 
 
 </section>

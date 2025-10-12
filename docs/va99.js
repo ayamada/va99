@@ -1,6 +1,6 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '5.6.20250929'; /* auto-updated */
+  const version = '5.7.20251013'; /* auto-updated */
 
 
   const stateSuspended = "suspended";
@@ -79,7 +79,7 @@ VA = (()=> {
 
 
   var playingStack = [];
-  var playAudioBufferInternal = (audioBuffer, asBgm, dontReduceVolumeByExcessPlay)=> {
+  var playSe = (audioBuffer, dontStartAutomatically=0, dontReduceVolumeByExcessPlay=0)=> {
     unlockAudioContext(); // unlock, first
     if (isAudioBuffer(audioBuffer)) {
       var sourceNode = prepareSourceNode(audioBuffer);
@@ -99,14 +99,16 @@ VA = (()=> {
         }
         playingStack.push([audioBuffer, sourceNode]);
       }
-      if (!asBgm) { sourceNode.start() }
-      if ((!asBgm) && (_audioContext.state == stateSuspended)) {
-        setTimeout(() => ((_audioContext.state == stateSuspended) && disposeSourceNodeSafely(sourceNode)), 999);
+      if (!dontStartAutomatically) {
+        sourceNode.start();
+        // cancel to play SE if suspended and elapsed some sec
+        if (_audioContext.state == stateSuspended) {
+          setTimeout(() => ((_audioContext.state == stateSuspended) && disposeSourceNodeSafely(sourceNode)), 999);
+        }
       }
       return sourceNode;
     }
   };
-  var playSe = (audioBuffer)=> playAudioBufferInternal(audioBuffer, 0, 0);
 
 
   var bgmState = {};
@@ -115,7 +117,7 @@ VA = (()=> {
 
   var bgmStartImmediately = (playParams)=> {
     var [audioBuffer, isOneshot, fadeSec, pitch, volume, pan, key] = playParams;
-    var sn = playAudioBufferInternal(audioBuffer, 1, 1);
+    var sn = playSe(audioBuffer, 1, 1);
     if (!sn) { return bgmStopImmediatelyAndPlayNextBgm() }
     sn.loop = !isOneshot;
     sn.G.gain.value = volume;
@@ -210,14 +212,14 @@ VA = (()=> {
   var silence = _audioContext.createBuffer(1, 2, _audioContext.sampleRate);
   // unlock AudioContext and resume from interrupted by click for PC browsers
   var clickHandle = () => {
-    playAudioBufferInternal(silence, 0, 1);
+    playSe(silence, 0, 1);
     document.removeEventListener("click", clickHandle);
   };
   document.addEventListener("click", clickHandle);
   // unlock AudioContext and resume from interrupted by touch actions for iOS
   // should not remove handle by removeEventListener
   // (in iOS, AudioContext may unlocks again by OS)
-  ["touchstart", "touchend"].forEach((k)=> document.addEventListener(k, ()=> playAudioBufferInternal(silence, 0, 1)));
+  ["touchstart", "touchend"].forEach((k)=> document.addEventListener(k, ()=> playSe(silence, 0, 1)));
 
 
   var _va = {

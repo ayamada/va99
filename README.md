@@ -65,6 +65,9 @@ Obsoleted older works:
 
 # ChangeLog
 
+- 5.7.20251013
+    - Second and third arguments in `VA.P()` were ignored, repaired now
+
 - 5.6.20250929
     - `VA.BGM(path)` caching AudioContext now, but it is in limited quantity (max quantity by `VA.BCL`)
     - `VA.BGM(path)` recognize same BGM now

@@ -588,6 +588,22 @@ It is rarely used.
 
 
   <div><span class="message-nekov"><img src="img/nekov.gif" class="face" />
+      I ran <code translate="no">VA.P('path/to/sound.m4a')</code>, but happens nothing
+  </span></div>
+
+  <div><span class="message-obav"><img src="img/obav.gif" class="face" />
+      You should run <code translate="no">VA.P(await VA.L('path/to/sound.m4a'))</code>.
+      <br />
+      <code translate="no">VA.P()</code> does not support to play path of audio file directly.
+      <br />
+      (But <code translate="no">VA.BGM()</code> support to play path of audio file directly)
+      <br />
+      <br />
+      May keep result of <code translate="no">await VA.L('path/to/sound.m4a')</code>, if you will play this sound repeatedly.
+  </span></div>
+
+
+  <div><span class="message-nekov"><img src="img/nekov.gif" class="face" />
       Does support IE?
   </span></div>
 

@@ -1,17 +1,32 @@
 // don't set `const`, `let`, `var` to VA (for google-closure-compiler)
 VA = (()=> {
-  const version = '5.7.20251013'; /* auto-updated */
+  const version = '5.8.20261005'; /* auto-updated */
 
 
   const stateSuspended = "suspended";
 
 
-  // I want to prepare instance of AudioContext lazily,
-  // but loader need value of sampleRate,
-  // and sampleRate is only provided by `_audioContext.sampleRate`.
-  // So this is prepared eagerly, cannot be helped.
-  // This is warned by Chromium, but cannot be helped.
-  var _audioContext = new (self.AudioContext||self.webkitAudioContext);
+  // NB: this library should be importable from node
+  //     (a unit-test of va99 users may run in node),
+  //     so this touches no WebAudio api and no document at this timing.
+  var g = globalThis;
+  var doc = g.document;
+  var AC = g.AudioContext || g.webkitAudioContext;
+  var OAC = g.OfflineAudioContext || g.webkitOfflineAudioContext;
+
+
+  // NB: an instance of AudioContext is prepared lazily, by `boot()`.
+  //     it is required by `_audioContext.sampleRate` in the audio loader,
+  //     and it is warned by Chromium if prepared at page loading.
+  var _audioContext;
+  var _masterGainNode;
+  var _masterVolume = 0.2;
+  var _extraNode;
+  var _silence;
+  var _oac;
+  var _isTriedBoot = 0;
+
+
   var unlockAudioContext = ()=> {
     // unlock AudioContext for chromium and firefox
     // and resume from interrupted for iOS
@@ -21,35 +36,60 @@ VA = (()=> {
   };
 
 
-  var _masterGainNode = _audioContext.createGain();
-  var _masterVolume = _masterGainNode.gain.value = 0.2;
-  var _extraNode;
+  var installUnlockHandler = ()=> {
+    if (!doc) { return }
+    // unlock AudioContext and resume from interrupted by click for PC browsers
+    var clickHandle = ()=> {
+      playSe(_silence, 0, 1);
+      doc.removeEventListener("click", clickHandle);
+    };
+    doc.addEventListener("click", clickHandle);
+    // unlock AudioContext and resume from interrupted by touch actions for iOS
+    // should not remove handle by removeEventListener
+    // (in iOS, AudioContext may unlocks again by OS)
+    ["touchstart", "touchend"].forEach((k)=> doc.addEventListener(k, ()=> playSe(_silence, 0, 1)));
+  };
+
+
+  // Prepare all WebAudio things at once, and only once.
+  // Returns a falsy value if WebAudio is unavailable (also if preparation
+  // is failed), and then all api become no-op. it never throws.
+  var boot = ()=> {
+    if (_isTriedBoot || !(AC && OAC)) { return _audioContext }
+    _isTriedBoot = 1;
+    try {
+      _audioContext = new AC;
+      _masterGainNode = _audioContext.createGain();
+      _masterGainNode.gain.value = _masterVolume;
+      _silence = _audioContext.createBuffer(1, 2, _audioContext.sampleRate);
+      interpolate(_extraNode);
+      installUnlockHandler();
+    } catch (e) {}
+    return _audioContext;
+  };
+
+
   var interpolate = (extraNode=undefined) => {
     // Disconnect old connections at first
-    if (_extraNode) {
-      _masterGainNode.disconnect();
-      _extraNode.disconnect();
-    } else {
-      _masterGainNode.disconnect();
-    }
+    var oldNode = _extraNode;
     _extraNode = extraNode;
-    if (extraNode) {
-      _masterGainNode.connect(extraNode).connect(_audioContext.destination);
-    } else {
-      _masterGainNode.connect(_audioContext.destination);
-    }
+    if (!_masterGainNode) { return } // it is connected in `boot()`, later
+    _masterGainNode.disconnect();
+    if (oldNode) { oldNode.disconnect() }
+    extraNode ? _masterGainNode.connect(extraNode).connect(_audioContext.destination) : _masterGainNode.connect(_audioContext.destination);
   }
 
 
   var isAudioBuffer = (o)=> (o instanceof AudioBuffer);
 
 
-  var oac = new (self.OfflineAudioContext||self.webkitOfflineAudioContext)(2, 2, _audioContext.sampleRate);
   var asyncLoadAudioBuffer = async (url) => {
+    if (!boot()) { return }
+    if (!_oac) { _oac = new OAC(2, 2, _audioContext.sampleRate) }
     var res = await fetch(url);
     if (!res.ok) throw new Error(url);
     var arrayBuffer = await res.arrayBuffer();
-    return await oac.decodeAudioData(arrayBuffer);
+    return await _oac.decodeAudioData(arrayBuffer);
   };
 
 
@@ -80,6 +120,7 @@ VA = (()=> {
 
   var playingStack = [];
   var playSe = (audioBuffer, dontStartAutomatically=0, dontReduceVolumeByExcessPlay=0)=> {
+    if (!boot()) { return }
     unlockAudioContext(); // unlock, first
     if (isAudioBuffer(audioBuffer)) {
       var sourceNode = prepareSourceNode(audioBuffer);
@@ -116,7 +157,7 @@ VA = (()=> {
 
 
   var bgmStartImmediately = (playParams)=> {
-    var [audioBuffer, isOneshot, fadeSec, pitch, volume, pan, key] = playParams;
+    var [audioBuffer, isOneshot, fadeSec, pitch, volume, pan] = playParams;
     var sn = playSe(audioBuffer, 1, 1);
     if (!sn) { return bgmStopImmediatelyAndPlayNextBgm() }
     sn.loop = !isOneshot;
@@ -145,15 +186,14 @@ VA = (()=> {
   var cachedBgmAbList = [];
   var referCachedBgmAb = (k) => cachedBgmAbList.find(([k2]) => (k === k2))?.[1];
   var pushCachedBgmAb = (k, ab) => {
-    // it is naive, can shortcut it crudely
-    //var alreadyExistIdx = cachedBgmAbList.findIndex(([k2]) => (k === k2));
-    //if (alreadyExistIdx != -1) { cachedBgmAbList.splice(alreadyExistIdx, 1) }
+    // NB: this cache is naive (no refcount, no update of existing entry)
     cachedBgmAbList.unshift([k, ab]);
     cachedBgmAbList.length = Math.min(cachedBgmAbList.length, _va.BCL);
   };
 
 
   var playBgm = (audioBuffer, isOneshot=0, fadeSec=1, pitch=1, volume=1, pan=0)=> {
+    if (!boot()) { return [] }
     if (audioBuffer != null && !isAudioBuffer(audioBuffer)) {
       var cachedAb = referCachedBgmAb(audioBuffer);
       if (cachedAb) { audioBuffer = cachedAb }
@@ -184,7 +224,8 @@ VA = (()=> {
     if (audioBuffer != null && !isAudioBuffer(audioBuffer)) {
       playBgm(null, false, fadeSec); // Stop bgm at first
       var expectedSerial = bgmSerial;
-      _va.L(audioBuffer).then((ab)=> (ab && ((cachedAb || pushCachedBgmAb(audioBuffer, ab)), ((expectedSerial == bgmSerial) && playBgm(ab, isOneshot, fadeSec, pitch, volume, pan)))));
+      // NB: a failure of loading should be ignored silently, not throw
+      _va.L(audioBuffer).catch(()=> {}).then((ab)=> (ab && ((cachedAb || pushCachedBgmAb(audioBuffer, ab)), ((expectedSerial == bgmSerial) && playBgm(ab, isOneshot, fadeSec, pitch, volume, pan)))));
       return resumeParams;
     }
 
@@ -206,22 +247,6 @@ VA = (()=> {
   };
 
 
-  interpolate(0);
-
-
-  var silence = _audioContext.createBuffer(1, 2, _audioContext.sampleRate);
-  // unlock AudioContext and resume from interrupted by click for PC browsers
-  var clickHandle = () => {
-    playSe(silence, 0, 1);
-    document.removeEventListener("click", clickHandle);
-  };
-  document.addEventListener("click", clickHandle);
-  // unlock AudioContext and resume from interrupted by touch actions for iOS
-  // should not remove handle by removeEventListener
-  // (in iOS, AudioContext may unlocks again by OS)
-  ["touchstart", "touchend"].forEach((k)=> document.addEventListener(k, ()=> playSe(silence, 0, 1)));
-
-
   var _va = {
     L: asyncLoadAudioBuffer, // *async* Load audioBuffer from audio-url
     P: playSe, // Play audioBuffer, return sourceNode (or undefined, when could not play)
@@ -234,7 +259,7 @@ VA = (()=> {
       _masterVolume = v;
       if (_masterGainNode) { _masterGainNode.gain.value = v }
     }, // set master Volume
-    get A () { return _audioContext }, // Audio context
+    get A () { return boot() }, // Audio context (undefined if unavailable)
     VER: 'va99-' + version,
     BCL: 2, // BGM cache limit
 
